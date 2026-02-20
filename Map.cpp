@@ -3,7 +3,7 @@
 
 #include "Map.hpp"
 
-Map::Map(const std::vector<std::vector<int>>& map) : map_(map) {}
+Map::Map(const std::vector<std::vector<int>>& map, float gridSize) : map_(map), gridSize_(gridSize) {}
 
 float Map::raycast(std::vector<float> position, std::vector<float> direction) {
     // TODO: Implement raycasting algorithm here
