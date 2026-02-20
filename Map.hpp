@@ -12,4 +12,4 @@ class Map {
     private:
         const std::vector<std::vector<int>>& map_;
 
-}
+};
