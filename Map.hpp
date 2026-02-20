@@ -1,6 +1,6 @@
-// Ray.hpp
-// Define a class for raycasting
-//
+// Map.hpp
+// A class to store the map and perform raycasting
+
 #include <vector>
 
 class Map { 
