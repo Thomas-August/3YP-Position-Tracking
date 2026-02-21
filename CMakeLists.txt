@@ -5,3 +5,6 @@ find_package(Eigen3 REQUIRED)
 
 add_library(map Map.cpp)
 target_link_libraries(map Eigen3::Eigen)
+
+add_executable(position_tracking main.cpp)
+target_link_libraries(position_tracking map)
