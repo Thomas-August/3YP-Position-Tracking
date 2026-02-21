@@ -1,16 +1,16 @@
 // Map.hpp
 // A class to store the map and perform raycasting
 
-#include <vector>
+#include <Eigen/Dense>
 
 class Map { 
     public: 
-        Map(const std::vector<std::vector<int>>& map, float gridSize);
-        float raycast(std::vector<float> position, std::vector<float> direction);
-        std::vector<std::vector<int>>& getMap();
+        Map(const Eigen::MatrixXi& map, float gridSize);
+        float raycast(Eigen::Vector3f position, Eigen::Vector3f direction);
+        Eigen::MatrixXi& getMap();
 
     private:
-        const std::vector<std::vector<int>>& map_;
+        const Eigen::MatrixXi& map_;
         float gridSize_;
 
 };
