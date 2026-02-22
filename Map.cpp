@@ -4,6 +4,7 @@
 #include "Map.hpp"
 #include <Eigen/Dense>
 #include <cmath>
+#include <iostream>
 
 Map::Map(const Eigen::MatrixXi& map, float mapGridSize, float mapHeight, float maxRayDist) : map_(map), mapGridSize_(mapGridSize), mapHeight_(mapHeight), maxRayDist_(maxRayDist) {}
     // A constructor to initialize the map and grid size.   
@@ -70,8 +71,11 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
 
     // Create a variable to count the number of iterations of the loop to prevent infinite loops in case of errors in the map or raycasting algorithm
     int iterations = 0;
-    // Set a maximum number of iterations to one more than 2 times the diagonal length of the map in grid cells, which should be more than enough for any ray to traverse the entire map without getting stuck in an infinite loop.
-    const int maxIterations = std::sqrt(map_.rows() * map_.rows() + map_.cols() * map_.cols()) * 2 + 1; 
+    // Set a maximum number of iterations to 10 times the diagonal length of the map in grid cells, which should be more than enough for any ray to traverse the entire map without getting stuck in an infinite loop.
+    const int maxIterations = std::sqrt(map_.rows() * map_.rows() + map_.cols() * map_.cols()) * 10; 
+
+    // Create a flag to track if the ray has left the map boundaries
+    bool rayExitedMap = false;
 
     // Loop until the ray exceeds the maximum ray distance
     while (totalDist < maxRayDist_ && iterations < maxIterations) {
@@ -98,8 +102,17 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
             if (cellIntersectY <= 0 && cellIntersectY > -mapGridSize_) {
                 // Increse the total distance traveled by the ray
                 totalDist += cellDist;
-                // If the east edge of the current grid cell has a wall
-                if (map_(cellIndexY, cellIndexX + 1) == 2 || map_(cellIndexY, cellIndexX + 1) == 3) {
+                // Check if the map cell for collision checking is out of bounds (ray is out of bounds)
+                if (cellIndexX + 1 < 0 || cellIndexX + 1 >= map_.cols() || cellIndexY < 0 || cellIndexY >= map_.rows()) {
+                    rayExitedMap = true;
+                    // No boundaries outside map bounds continue ray until it reaches max ray distance
+                    // Move the ray to the point it intersects with the east edge of the current grid cell
+                    cellPosX = 0;
+                    cellPosY = cellIntersectY;
+                    // Update the cell indices to reflect the new grid cell the ray is in after moving through the east edge
+                    cellIndexX += 1;
+                    continue; // Restart the loop to check for collisions in the next cell
+                } else if (map_(cellIndexY, cellIndexX + 1) == 2 || map_(cellIndexY, cellIndexX + 1) == 3) {
                     break; // Collision with east wall so exit the loop
                 } else {
                     // Move the ray to the point it intersects with the east edge of the current grid cell
@@ -120,8 +133,17 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
             if (cellIntersectY <= 0 && cellIntersectY > -mapGridSize_) {
                 // Increse the total distance traveled by the ray
                 totalDist += cellDist;
-                // If the west edge of the current grid cell has a wall
-                if (map_(cellIndexY, cellIndexX) == 2 || map_(cellIndexY, cellIndexX) == 3) {
+                // Check if the map cell for collision checking is out of bounds (ray is out of bounds)
+                if (cellIndexX < 0 || cellIndexX >= map_.cols() || cellIndexY < 0 || cellIndexY >= map_.rows()) {
+                    rayExitedMap = true;
+                    // No boundaries outside map bounds continue ray until it reaches max ray distance
+                    // Move the ray to the point it intersects with the west edge of the current grid cell
+                    cellPosX = mapGridSize_;
+                    cellPosY = cellIntersectY;
+                    // Update the cell indices to reflect the new grid cell the ray is in after moving through the west edge
+                    cellIndexX -= 1;
+                    continue; // Restart the loop to check for collisions in the next cell
+                } else if (map_(cellIndexY, cellIndexX) == 2 || map_(cellIndexY, cellIndexX) == 3) {
                     break; // Collision with west wall so exit the loop
                 } else {
                     // Move the ray to the point it intersects with the west edge of the current grid cell
@@ -143,8 +165,17 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
             if (cellIntersectX >= 0 && cellIntersectX < mapGridSize_) {
                 // Increse the total distance traveled by the ray
                 totalDist += cellDist;
-                // If the north edge of the current grid cell has a wall
-                if (map_(cellIndexY, cellIndexX) == 1 || map_(cellIndexY, cellIndexX) == 3) {
+                // Check if the map cell for collision checking is out of bounds (ray is out of bounds)
+                if (cellIndexX < 0 || cellIndexX >= map_.cols() || cellIndexY < 0 || cellIndexY >= map_.rows()) {
+                    rayExitedMap = true;
+                    // No boundaries outside map bounds continue ray until it reaches max ray distance
+                    // Move the ray to the point it intersects with the north edge of the current grid cell
+                    cellPosX = cellIntersectX;
+                    cellPosY = -mapGridSize_;
+                    // Update the cell indices to reflect the new grid cell the ray is in after moving through the north edge
+                    cellIndexY -= 1;
+                    continue; // Restart the loop to check for collisions in the next cell
+                } else if (map_(cellIndexY, cellIndexX) == 1 || map_(cellIndexY, cellIndexX) == 3) {
                     break; // Collision with north wall so exit the loop
                 } else {
                     // Move the ray to the point it intersects with the north edge of the current grid cell
@@ -165,8 +196,17 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
             if (cellIntersectX >= 0 && cellIntersectX < mapGridSize_) {
                 // Increse the total distance traveled by the ray
                 totalDist += cellDist;
-                // If the south edge of the current grid cell has a wall
-                if (map_(cellIndexY + 1, cellIndexX) == 1 || map_(cellIndexY + 1, cellIndexX) == 3) {
+                // Check if the map cell for collision checking is out of bounds (ray is out of bounds)
+                if (cellIndexX < 0 || cellIndexX >= map_.cols() || cellIndexY + 1 < 0 || cellIndexY + 1 >= map_.rows()) {
+                    rayExitedMap = true;
+                    // No boundaries outside map bounds continue ray until it reaches max ray distance
+                    // Move the ray to the point it intersects with the south edge of the current grid cell
+                    cellPosX = cellIntersectX;
+                    cellPosY = 0;
+                    // Update the cell indices to reflect the new grid cell the ray is in after moving through the south edge
+                    cellIndexY += 1;
+                    continue; // Restart the loop to check for collisions in the next cell
+                } else if (map_(cellIndexY + 1, cellIndexX) == 1 || map_(cellIndexY + 1, cellIndexX) == 3) {
                     break; // Collision with south wall so exit the loop
                 } else {
                     // Move the ray to the point it intersects with the south edge of the current grid cell
@@ -182,6 +222,11 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
         // The above checks are comprehensive so if the code get to this point throw an error as it means there is a bug in the raycasting algorithm
         throw std::runtime_error("Error in raycasting algorithm: failed to determine which edge the ray intersects with.");
     
+    }
+
+    // Print warning if ray exited the map
+    if (rayExitedMap) {
+        std::cerr << "Warning: Ray exited map boundaries. Ray continued in unmapped space until max distance reached." << std::endl;
     }
 
     // If there is a z component to the ray check if the ray hit the floor or ceiling before hitting a wall
