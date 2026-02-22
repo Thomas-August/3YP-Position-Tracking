@@ -25,5 +25,29 @@ float Map::raycast(Eigen::Vector3f position, Eigen::Vector3f direction) {
     // find height at the collision point and check for floor and ceiling collisions.
     Eigen::Vector2f directionXY = direction.head<2>();
 
+    // Check edge case where there is no component of the direcition vector in the xy plane
+    if (directionXY.norm() == 0.0f) {
+        // If there is no component of the direction vector in the xy plane, then the ray is vertical and can only collide with the floor or ceiling.
+        // In this case, we can directly check for floor and ceiling collisions without performing raycasting in the xy plane.
+
+        // Calculate the distance to the floor and ceiling from the current position
+        float distanceToFloor = position.z() / -direction.z(); // Distance to floor
+        float distanceToCeiling = (mapHeight_ - position.z()) / direction.z(); // Distance to ceiling
+
+        // Check for floor collision
+        if (distanceToFloor > 0 && distanceToFloor < maxRayDistance_) {
+            return distanceToFloor; // Collision with floor
+        }
+
+        // Check for ceiling collision
+        if (distanceToCeiling > 0 && distanceToCeiling < maxRayDistance_) {
+            return distanceToCeiling; // Collision with ceiling
+        }
+
+        return maxRayDistance_; // No collision within max ray distance
+    }
+
+    // TODO: Implement raycasting in the xy plane to check for wall collisions, then check for floor and ceiling collisions at the collision point with the wall, and return the distance to the closest collision point (wall, floor, or ceiling) or max ray distance if no collision occurs within that distance.
+
     return 0.0f;
 }
