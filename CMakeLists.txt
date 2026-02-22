@@ -10,5 +10,5 @@ add_executable(position_tracking main.cpp)
 target_link_libraries(position_tracking map)
 
 enable_testing()
-add_executable(test_map test_map.cpp)
+add_executable(test_map map_tests.cpp)
 target_link_libraries(test_map map)
