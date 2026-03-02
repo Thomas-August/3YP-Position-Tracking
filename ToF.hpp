@@ -5,7 +5,7 @@
 
 class ToF {
     public:
-        ToF(Map &map, Eigen::Vector3f pos, Eigen::Vector3f ori, float maxRange, int arraySize = 4, float fov = 45);
+        ToF(Map &map, Eigen::Vector3f pos, Eigen::Vector4f ori, float maxRange, int arraySize = 4, float fov = 45);
         // A constructor to initialize the ToF sensor with a reference to the map, its position and orientation, and parameters for the sensor setup.
         // Inputs:
         // - map: a reference to the Map object, used to perform raycasting for distance measurement.
