@@ -5,7 +5,7 @@
 
 class ToF {
     public:
-        ToF(Map &map, Eigen::Vector3f pos, Eigen::Vector4f ori, float maxRange, int arraySize = 4, float fov = 45);
+        ToF(Map &map, Eigen::Vector3f pos, Eigen::Quaternionf ori, float maxRange, int arraySize = 4, float fov = 45);
         // A constructor to initialize the ToF sensor with a reference to the map, its position and orientation, and parameters for the sensor setup.
         // Inputs:
         // - map: a reference to the Map object, used to perform raycasting for distance measurement.
@@ -15,7 +15,7 @@ class ToF {
         // - arraySize: the size of the distance measurement array, which determines how many rays are cast within the field of view (FOV) of the sensor. Default is 4.     
         // - fov: the field of view (FOV) of the ToF sensor in degrees, which determines the angular spread of the rays cast for distance measurement. Default is 45 degrees.
 
-        void setPose(Eigen::Vector3f pos, Eigen::Vector4f ori);
+        void setPose(Eigen::Vector3f pos, Eigen::Quaternionf ori);
         // A function to set the position and orientation of the ToF sensor.
         Eigen::Vector7f getPose();
         // A function to get the position and orientation of the ToF sensor as a 7D vector (x, y, z, qx, qy, qz, qw).
@@ -29,7 +29,7 @@ class ToF {
         // A reference to the map object, used to perform raycasting for distance measurement.
         Eigen::Vector3f pos_;
         // The position of the ToF sensor in 3D space relative to the northwest corner on the floor, so x and z are positive and y is negative within the map (x, y, z).
-        Eigen::Vector4f ori_;
+        Eigen::Quaternionf ori_;
         // The orientation of the ToF sensor in 3D space as a quaternion (qx, qy, qz, qw).
         float maxRange_;
         // The maximum range of the ToF sensor for distance measurement.

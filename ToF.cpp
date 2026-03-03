@@ -3,7 +3,7 @@
 
 #include <Eigen/Dense>
 
-ToF::ToF(Map &map, Eigen::Vector3f pos, Eigen::Vector4f ori, float maxRange, int arraySize, float fov) : map_(map), pos_(pos), maxRange_(maxRange), arraySize_(arraySize), fov_(fov) {
+ToF::ToF(Map &map, Eigen::Vector3f pos, Eigen::Quaternionf ori, float maxRange, int arraySize, float fov) : map_(map), pos_(pos), maxRange_(maxRange), arraySize_(arraySize), fov_(fov) {
     // A constructor to initialize the ToF sensor with a reference to the map, its position and orientation, and parameters for the sensor setup.
         // Inputs:
         // - map: a reference to the Map object, used to perform raycasting for distance measurement.
@@ -36,7 +36,7 @@ ToF::ToF(Map &map, Eigen::Vector3f pos, Eigen::Vector4f ori, float maxRange, int
 
 }
 
-void ToF::setPose(Eigen::Vector3f pos, Eigen::Vector4f ori) {
+void ToF::setPose(Eigen::Vector3f pos, Eigen::Quaternionf ori) {
     // A function to set the position and orientation of the ToF sensor.
     // Ensure that the quaternion is a unit vector
     if (ori.norm() == 0.0f) {
