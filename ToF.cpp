@@ -1,7 +1,11 @@
 // ToF.cpp
 // A class to simulate the Time of Flight (ToF) sensor
 
+#include "ToF.hpp"
+#include "Map.hpp"
 #include <Eigen/Dense>
+#include <cmath>
+#include <stdexcept>
 
 ToF::ToF(Map &map, Eigen::Vector3f pos, Eigen::Quaternionf ori, float maxRange, int arraySize, float fov) : map_(map), pos_(pos), maxRange_(maxRange), arraySize_(arraySize), fov_(fov) {
     // A constructor to initialize the ToF sensor with a reference to the map, its position and orientation, and parameters for the sensor setup.
