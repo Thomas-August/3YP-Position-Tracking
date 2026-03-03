@@ -68,7 +68,7 @@ Eigen::MatrixXf ToF::readDistances() {
         // Rotate the ray direction by the sensor's orientation
         Eigen::Vector3f rotatedDir = ori_ * rayDir_.row(i).transpose();
         // Perform raycasting to get the distance measurement for the current ray
-        distances(i) = map_.raycast(pos_, rotatedDir);
+        distances(i) = map_.raycast(pos_, rotatedDir, maxRange_);
     }
     return distances;
 }
