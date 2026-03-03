@@ -53,3 +53,18 @@ Eigen::Vector7f ToF::getPose() {
     pose << pos_, ori_;
     return pose;
 }
+
+Eigen::MatrixXf ToF::readDistances() {
+    // A function to read the distance measurements from the ToF sensor. 
+    // Returns a vector of size arraySize^2 containing the distance measurements for each raycast starting
+    // from the top left ray and going across the rows and then down the columns of the raycast grid.
+
+    Eigen::VectorXf distances(arraySize_ * arraySize_);
+    for (int i = 0; i < arraySize_ * arraySize_; ++i) {
+        // Rotate the ray direction by the sensor's orientation
+        Eigen::Vector3f rotatedDir = ori_ * rayDir_.row(i).transpose();
+        // Perform raycasting to get the distance measurement for the current ray
+        distances(i) = map_.raycast(pos_, rotatedDir);
+    }
+    return distances;
+}
