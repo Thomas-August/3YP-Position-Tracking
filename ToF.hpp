@@ -3,6 +3,8 @@
 
 #include <Eigen/Dense>
 
+class Map;  // Forward declaration
+
 class ToF {
     public:
         ToF(Map &map, Eigen::Vector3f pos, Eigen::Quaternionf ori, float maxRange, int arraySize = 4, float fov = 45);
@@ -17,8 +19,10 @@ class ToF {
 
         void setPose(Eigen::Vector3f pos, Eigen::Quaternionf ori);
         // A function to set the position and orientation of the ToF sensor.
-        Eigen::Vector7f getPose();
-        // A function to get the position and orientation of the ToF sensor as a 7D vector (x, y, z, qx, qy, qz, qw).
+        Eigen::Vector3f getPos();
+        // A function to get the position of the ToF sensor.
+        Eigen::Quaternionf getOri();
+        // A function to get the orientation of the ToF sensor as a quaternion.
         Eigen::VectorXf readDistances();
         // A function to read the distance measurements from the ToF sensor. 
         // Returns a vector of size arraySize^2 containing the distance measurements for each raycast starting
@@ -39,5 +43,4 @@ class ToF {
         // The field of view (FOV) of the ToF sensor in degrees, which determines the angular spread of the rays cast for distance measurement.
         Eigen::MatrixXf rayDir_;
         // A matrix of size arraySize^2 x 3 containing the direction vectors for each raycast in the sensor's field of view, relative to the sensor's orientation.
-
-    }
+};
