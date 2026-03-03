@@ -6,7 +6,7 @@
 #include <cmath>
 #include <iostream>
 
-Map::Map(const Eigen::MatrixXi& map, float mapGridSize, float mapHeight, float maxRayDist) : map_(map), mapGridSize_(mapGridSize), mapHeight_(mapHeight), maxRayDist_(maxRayDist) {}
+Map::Map(const Eigen::MatrixXi& map, float mapGridSize, float mapHeight) : map_(map), mapGridSize_(mapGridSize), mapHeight_(mapHeight) {}
     // A constructor to initialize the map and grid size.   
 
 Eigen::MatrixXi& Map::getMap() {
@@ -14,7 +14,7 @@ Eigen::MatrixXi& Map::getMap() {
     return const_cast<Eigen::MatrixXi&>(map_);
 } 
 
-float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
+float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir, float maxRayDist) {
     // A function to perform raycasing on the map.
     // This fucntion projects a horizontal ray from the given position in the direction of the given direction projected into the xy plane,
     // checks for collisions with the map walls, then checks if the ray has exceeded the vertical bounds at that point, and returns the
@@ -42,16 +42,16 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
         float distToCeiling = (mapHeight_ - pos.z()) / dir.z(); // Distance to ceiling
 
         // Check for floor collision
-        if (distToFloor > 0 && distToFloor < maxRayDist_) {
+        if (distToFloor > 0 && distToFloor < maxRayDist) {
             return distToFloor; // Collision with floor
         }
 
         // Check for ceiling collision
-        if (distToCeiling > 0 && distToCeiling < maxRayDist_) {
+        if (distToCeiling > 0 && distToCeiling < maxRayDist) {
             return distToCeiling; // Collision with ceiling
         }
 
-        return maxRayDist_; // No collision within max ray distance
+        return maxRayDist; // No collision within max ray distance
     }
 
     // Otherwise, if there is an xy component of the direction vector
@@ -78,7 +78,7 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
     bool rayExitedMap = false;
 
     // Loop until the ray exceeds the maximum ray distance
-    while (totalDist < maxRayDist_ && iterations < maxIterations) {
+    while (totalDist < maxRayDist && iterations < maxIterations) {
 
         // Check which edge of the cell the ray intersects with and check if there is a wall at that edge
         // If there is a wall at that edge then return the total distance traveled by the ray
@@ -246,8 +246,8 @@ float Map::raycast(Eigen::Vector3f pos, Eigen::Vector3f dir) {
     // totalDist now contains the distance to the collision point with a wall floor or ceiling
 
     // Check if the total distance traveled by the ray exceeds the maximum ray distance and return the appropriate value
-    if (totalDist >= maxRayDist_) {
-        return maxRayDist_; // No collision within max ray distance
+    if (totalDist >= maxRayDist) {
+        return maxRayDist; // No collision within max ray distance
     } else {
         return totalDist;
     }
