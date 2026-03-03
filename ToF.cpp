@@ -35,3 +35,21 @@ ToF::ToF(Map &map, Eigen::Vector3f pos, Eigen::Vector4f ori, float maxRange, int
     }
 
 }
+
+void ToF::setPose(Eigen::Vector3f pos, Eigen::Vector4f ori) {
+    // A function to set the position and orientation of the ToF sensor.
+    // Ensure that the quaternion is a unit vector
+    if (ori.norm() == 0.0f) {
+        throw std::invalid_argument("Quaternion orientation cannot be the zero vector.");
+    }
+    ori.normalize();
+    pos_ = pos;
+    ori_ = ori;
+}
+
+Eigen::Vector7f ToF::getPose() {
+    // A function to get the position and orientation of the ToF sensor as a 7D vector (x, y, z, qx, qy, qz, qw).
+    Eigen::Vector7f pose;
+    pose << pos_, ori_;
+    return pose;
+}
