@@ -37,7 +37,7 @@ class ToF {
         // The size of the distance measurement array, which determines how many rays are cast within the field of view (FOV) of the sensor.
         float fov_;
         // The field of view (FOV) of the ToF sensor in degrees, which determines the angular spread of the rays cast for distance measurement.
-        Eigen::VectorXf rayDir_;
-        // A vector of size arraySize^2 containing the direction vectors for each raycast in the sensor's field of view, relative to the sensor's orientation.
+        Eigen::MatrixXf rayDir_;
+        // A matrix of size arraySize^2 x 3 containing the direction vectors for each raycast in the sensor's field of view, relative to the sensor's orientation.
 
     }
