@@ -51,14 +51,17 @@ void ToF::setPose(Eigen::Vector3f pos, Eigen::Quaternionf ori) {
     ori_ = ori;
 }
 
-Eigen::Vector7f ToF::getPose() {
-    // A function to get the position and orientation of the ToF sensor as a 7D vector (x, y, z, qx, qy, qz, qw).
-    Eigen::Vector7f pose;
-    pose << pos_, ori_;
-    return pose;
+Eigen::Vector3f ToF::getPos() {
+    // A function to get the position of the ToF sensor.
+    return pos_;
 }
 
-Eigen::MatrixXf ToF::readDistances() {
+Eigen::Quaternionf ToF::getOri() {
+    // A function to get the orientation of the ToF sensor as a quaternion.
+    return ori_;
+}
+
+Eigen::VectorXf ToF::readDistances() {
     // A function to read the distance measurements from the ToF sensor. 
     // Returns a vector of size arraySize^2 containing the distance measurements for each raycast starting
     // from the top left ray and going across the rows and then down the columns of the raycast grid.
