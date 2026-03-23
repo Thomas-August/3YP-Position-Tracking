@@ -1,7 +1,23 @@
 cmake_minimum_required(VERSION 3.15)
 project(PositionTracking)
 
-find_package(Eigen3 REQUIRED)
+include(FetchContent)
+
+message(STATUS "Fetching Eigen 3.4.0 via FetchContent...")
+FetchContent_Declare(
+	eigen
+	DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+	URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+)
+FetchContent_MakeAvailable(eigen)
+
+if(NOT TARGET Eigen3::Eigen)
+	if(TARGET eigen)
+		add_library(Eigen3::Eigen ALIAS eigen)
+	else()
+		message(FATAL_ERROR "Fetched Eigen, but Eigen3::Eigen target is unavailable.")
+	endif()
+endif()
 
 add_library(map Map.cpp)
 target_link_libraries(map Eigen3::Eigen)
