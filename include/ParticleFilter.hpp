@@ -5,6 +5,7 @@
 
 #include <Eigen/Dense>
 
+#include <cstdint>
 #include <cstddef>
 #include <random>
 #include <vector>
@@ -23,6 +24,11 @@ struct ParticleFilterBounds {
 class ParticleFilter {
     public:
         ParticleFilter(Drone& virtualDrone, std::size_t numParticles, float weightStdDev);
+        ParticleFilter(Drone& virtualDrone, std::size_t numParticles, float weightStdDev, std::uint32_t seed);
+        ParticleFilter(Drone& virtualDrone, std::size_t numParticles, float weightStdDev,
+                       float resamplePositionNoiseStdDev, float resampleYawNoiseStdDev);
+        ParticleFilter(Drone& virtualDrone, std::size_t numParticles, float weightStdDev, std::uint32_t seed,
+                       float resamplePositionNoiseStdDev, float resampleYawNoiseStdDev);
 
         void initializeUniform(const ParticleFilterBounds& bounds);
         void updateWeights(const Eigen::VectorXf& measurement);
@@ -37,6 +43,12 @@ class ParticleFilter {
         float getWeightStdDev() const;
         void setWeightStdDev(float weightStdDev);
 
+        float getResamplePositionNoiseStdDev() const;
+        void setResamplePositionNoiseStdDev(float resamplePositionNoiseStdDev);
+
+        float getResampleYawNoiseStdDev() const;
+        void setResampleYawNoiseStdDev(float resampleYawNoiseStdDev);
+
     private:
         Eigen::VectorXf predictMeasurement(const Particle& particle);
         float computeUnnormalizedWeight(const Eigen::VectorXf& measurement,
@@ -45,5 +57,7 @@ class ParticleFilter {
         Drone& virtualDrone_;
         std::vector<Particle> particles_;
         float weightStdDev_;
+        float resamplePositionNoiseStdDev_;
+        float resampleYawNoiseStdDev_;
         std::mt19937 rng_;
 };
