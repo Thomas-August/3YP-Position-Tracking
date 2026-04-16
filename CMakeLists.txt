@@ -27,3 +27,7 @@ add_test(NAME MapTests COMMAND test_map)
 add_executable(test_tof test/tof_tests.cpp)
 target_link_libraries(test_tof tof map Eigen3::Eigen)
 add_test(NAME ToFTests COMMAND test_tof)
+
+add_executable(test_drone test/drone_tests.cpp)
+target_link_libraries(test_drone drone tof map Eigen3::Eigen)
+add_test(NAME DroneTests COMMAND test_drone)
