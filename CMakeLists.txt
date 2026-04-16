@@ -11,6 +11,9 @@ target_link_libraries(map Eigen3::Eigen)
 add_library(tof src/ToF.cpp)
 target_link_libraries(tof map Eigen3::Eigen)
 
+add_library(drone src/Drone.cpp)
+target_link_libraries(drone tof map Eigen3::Eigen)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 add_executable(position_tracking src/main.cpp)

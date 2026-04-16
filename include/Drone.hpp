@@ -2,6 +2,7 @@
 // A class to simulate a drone with ToF sensors (TODO: and an IMU) 
 
 #include <Eigen/Dense>
+#include <vector>
 
 class Map;  // Forward declaration
 class ToF;  // Forward declaration
@@ -9,7 +10,7 @@ class ToF;  // Forward declaration
 struct ToFSensor {
     ToF* sensor; // Pointer to the ToF sensor object
     Eigen::Isometry3f relativePose; // The pose of the sensor relative to the drone's body frame (x, y, z, roll, pitch, yaw)
-}
+};
 
 class Drone {
     public:
@@ -30,4 +31,4 @@ class Drone {
         std::vector<ToFSensor> tofSensors_;
         // A vector of ToF sensors mounted on the drone, each with its own relative pose to the drone's body frame.
 
-}
+};
